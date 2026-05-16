@@ -1,0 +1,134 @@
+﻿<Window x:Class="Dilettante.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Dilettante" Height="550" Width="800">
+
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#0a1628" Offset="0"/>
+            <GradientStop Color="#0d2137" Offset="0.5"/>
+            <GradientStop Color="#0a1628" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Navbar: 3 columns — Title | Nav buttons | Search + Library -->
+        <Grid Grid.Row="0" Margin="24,10,24,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left: Title + tag -->
+            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                <TextBlock Text="Dilettante" FontSize="22"
+                           FontWeight="Bold" Foreground="White"/>
+                <TextBlock x:Name="ProfileTag" FontSize="11"
+                           Foreground="#8899aa"/>
+            </StackPanel>
+
+            <!-- Center: Back/Forward -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal"
+                        HorizontalAlignment="Left" VerticalAlignment="Center"
+                        Margin="16,0,0,0">
+                <Button x:Name="BackButton" Content="←" Width="32" Height="32"
+                        Style="{StaticResource RoundedButton}"
+                        Margin="0,0,6,0" IsEnabled="False"
+                        Click="BackButton_Click"/>
+                <Button x:Name="ForwardButton" Content="→" Width="32" Height="32"
+                        Style="{StaticResource RoundedButton}"
+                        IsEnabled="False"
+                        Click="ForwardButton_Click"/>
+            </StackPanel>
+
+            <!-- Right: Search + Library -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal"
+                        VerticalAlignment="Center">
+
+                <!-- Search area -->
+                <Grid Width="260">
+                    <TextBox x:Name="SearchBox"
+                             Style="{StaticResource RoundedTextBox}"
+                             Foreground="White" FontSize="14"
+                             TextChanged="SearchBox_TextChanged"
+                             LostFocus="SearchBox_LostFocus"/>
+
+                    <!-- Placeholder text -->
+                    <TextBlock Text="Search Steam"
+                               Foreground="#8899aa" FontSize="13"
+                               VerticalAlignment="Center"
+                               Margin="12,0,0,0"
+                               IsHitTestVisible="False">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <!-- Dropdown popup -->
+                    <Popup x:Name="SearchPopup"
+                           PlacementTarget="{Binding ElementName=SearchBox}"
+                           Placement="Bottom"
+                           StaysOpen="False"
+                           AllowsTransparency="True">
+                        <Border Background="#0d2137" CornerRadius="8"
+                                BorderBrush="#2a4a6a" BorderThickness="1"
+                                MinWidth="260" MaxHeight="300">
+                            <ListBox x:Name="SearchResults"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     ItemContainerStyle="{StaticResource HoverListBoxItem}"
+                                     SelectionChanged="SearchResults_SelectionChanged">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="4">
+                                            <Image Source="{Binding TinyImage}"
+                                                   Width="60" Height="23"
+                                                   Margin="0,0,10,0"/>
+                                            <TextBlock Text="{Binding Name}"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="13" Foreground="White"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Border>
+                    </Popup>
+                </Grid>
+
+                <Button x:Name="LibraryButton" Content="Your Library"
+                        Width="120" Height="38" Margin="10,0,0,0"
+                        Style="{StaticResource RoundedButton}"
+                        Click="Click_LibraryButton"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Divider -->
+        <Rectangle Grid.Row="1" Height="1" Margin="24,0,24,0">
+            <Rectangle.Fill>
+                <SolidColorBrush Color="#2a4a6a"/>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <!-- Content Frame -->
+        <Frame x:Name="MainFrame" Grid.Row="2"
+               NavigationUIVisibility="Hidden"
+               Navigated="UpdateNavButtons"/>
+    </Grid>
+</Window>

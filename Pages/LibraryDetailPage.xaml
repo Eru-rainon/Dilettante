@@ -1,0 +1,129 @@
+﻿<Page x:Class="Dilettante.Pages.LibraryDetailPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="Transparent">
+
+    <Grid>
+        <!-- Blurred background -->
+        <Image x:Name="BackgroundImage" Stretch="UniformToFill" Opacity="0.8">
+            <Image.Effect>
+                <BlurEffect Radius="40"/>
+            </Image.Effect>
+        </Image>
+
+        <!-- Dark overlay -->
+        <Rectangle>
+            <Rectangle.Fill>
+                <SolidColorBrush Color="#0a1628" Opacity="0.3"/>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="24,24,24,24">
+
+                <!-- Top: image left, info right -->
+                <Grid Margin="0,0,0,24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Header image -->
+                    <Border Grid.Column="0" CornerRadius="8"
+                            ClipToBounds="True" VerticalAlignment="Top"
+                            Margin="0,0,24,0">
+                        <Image x:Name="HeaderImage" Width="280"
+                               Stretch="Uniform"/>
+                    </Border>
+
+                    <!-- Game info -->
+                    <StackPanel Grid.Column="1" VerticalAlignment="Top">
+
+                        <TextBlock x:Name="GameTitle" FontSize="26"
+                                   FontWeight="Bold" Foreground="White"
+                                   TextWrapping="Wrap" Margin="0,0,0,4"/>
+                        <TextBlock x:Name="DeveloperText" FontSize="12"
+                                   Foreground="#aabbcc" Margin="0,0,0,2"/>
+                        <TextBlock x:Name="GenresText" FontSize="12"
+                                   Foreground="#8899aa" Margin="0,0,0,20"/>
+
+                        <!-- Divider -->
+                        <Rectangle Height="1" Margin="0,0,0,16">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="#2a4a6a"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+
+                        <!-- Stats grid -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0"
+                                       Text="Status" Foreground="#8899aa"
+                                       FontSize="12" Margin="0,0,0,10"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1"
+                                       x:Name="StatusText" Foreground="White"
+                                       FontSize="12" FontWeight="SemiBold"
+                                       Margin="0,0,0,10"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0"
+                                       Text="How you played" Foreground="#8899aa"
+                                       FontSize="12" Margin="0,0,0,10"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1"
+                                       x:Name="OwnershipText" Foreground="White"
+                                       FontSize="12" FontWeight="SemiBold"
+                                       Margin="0,0,0,10"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0"
+                                       Text="Your Score" Foreground="#8899aa"
+                                       FontSize="12" Margin="0,0,0,10"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1"
+                                       x:Name="ScoreText" Foreground="White"
+                                       FontSize="12" FontWeight="SemiBold"
+                                       Margin="0,0,0,10"/>
+
+                            <TextBlock Grid.Row="3" Grid.Column="0"
+                                       Text="Achievements" Foreground="#8899aa"
+                                       FontSize="12" Margin="0,0,0,10"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1"
+                                       x:Name="AchievementsText" Foreground="White"
+                                       FontSize="12" FontWeight="SemiBold"
+                                       Margin="0,0,0,10"/>
+                        </Grid>
+
+                        <!-- Divider -->
+                        <Rectangle Height="1" Margin="0,8,0,16">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="#2a4a6a"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+
+                        <!-- Action buttons -->
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="EditButton" Content="Edit Details"
+                                    Width="140" Height="36" Margin="0,0,12,0"
+                                    Style="{StaticResource RoundedButton}"
+                                    Click="EditButton_Click"/>
+                            <Button x:Name="AchievementsButton"
+                                    Content="Manage Achievements"
+                                    Width="180" Height="36"
+                                    Style="{StaticResource RoundedButton}"
+                                    Click="AchievementsButton_Click"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

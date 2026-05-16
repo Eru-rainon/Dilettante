@@ -1,0 +1,8 @@
+bin/
+obj/
+*.db
+appsettings.json
+*.user
+.vs/
+*.db-shm
+*.db-wal

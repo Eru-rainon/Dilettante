@@ -1,0 +1,145 @@
+﻿<Page x:Class="Dilettante.Pages.GameDetailPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="Transparent">
+
+    <Grid>
+        <!-- Blurred background layer -->
+        <Image x:Name="BackgroundImage" Stretch="UniformToFill"
+               Opacity="0.8">
+            <Image.Effect>
+                <BlurEffect Radius="40"/>
+            </Image.Effect>
+        </Image>
+
+        <!-- Dark overlay to tone down the background -->
+        <Rectangle>
+            <Rectangle.Fill>
+                <SolidColorBrush Color="#0a1628" Opacity="0.2"/>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <!-- Scrollable content on top -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="24,20,24,24">
+
+                <!-- Top section: info left, image right -->
+                <Border Margin="0,0,0,24">
+                    <Grid MaxWidth="900" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Left: game info -->
+                        <StackPanel Grid.Column="0" VerticalAlignment="Top"
+                                    Margin="0,0,24,0">
+                            <TextBlock x:Name="GameTitle" FontSize="28"
+                                       FontWeight="Bold" Foreground="White"
+                                       TextWrapping="Wrap" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="DevelopersText" FontSize="13"
+                                       Foreground="#aabbcc" Margin="0,0,0,4"/>
+                            <TextBlock x:Name="GenresText" FontSize="13"
+                                       Foreground="#8899aa" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="MetacriticText" FontSize="13"
+                                       Foreground="#4fc3f7" Margin="0,0,0,12"/>
+                            <TextBlock x:Name="DescriptionText" FontSize="13"
+                                       Foreground="#ccddee" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <!-- Right: header image -->
+                        <Border Grid.Column="1" CornerRadius="8"
+                                ClipToBounds="True" VerticalAlignment="Top">
+                            <Image x:Name="HeaderImage" Width="280"
+                                   Stretch="Uniform" HorizontalAlignment="Right"/>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Divider -->
+                <Rectangle Height="1" Margin="0,0,0,16">
+                    <Rectangle.Fill>
+                        <SolidColorBrush Color="#2a4a6a"/>
+                    </Rectangle.Fill>
+                </Rectangle>
+
+                <!-- Screenshots carousel -->
+                <TextBlock Text="Screenshots" FontSize="15"
+                           FontWeight="SemiBold" Foreground="White"
+                           Margin="0,0,0,8"/>
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Disabled"
+                              Margin="0,0,0,24">
+                    <ItemsControl x:Name="ScreenshotsList">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding PathThumbnail}"
+                                       Width="640" Height="360"
+                                       Margin="0,0,8,0"
+                                       Stretch="UniformToFill"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <!-- Divider -->
+                <Rectangle Height="1" Margin="0,0,0,16">
+                    <Rectangle.Fill>
+                        <SolidColorBrush Color="#2a4a6a"/>
+                    </Rectangle.Fill>
+                </Rectangle>
+
+                <!-- Status -->
+                <TextBlock Text="Status" Foreground="White"
+                           FontSize="13" Margin="0,0,0,6"/>
+                <ComboBox x:Name="StatusCombo" Width="200"
+                          HorizontalAlignment="Left"
+                          Margin="0,0,0,12" SelectedIndex="0">
+                    <ComboBoxItem>Playing</ComboBoxItem>
+                    <ComboBoxItem>Completed</ComboBoxItem>
+                    <ComboBoxItem>Wishlisted</ComboBoxItem>
+                    <ComboBoxItem>Paused</ComboBoxItem>
+                    <ComboBoxItem>Abandoned</ComboBoxItem>
+                </ComboBox>
+
+                <!-- Ownership -->
+                <TextBlock Text="How did you play it?" Foreground="White"
+                           FontSize="13" Margin="0,0,0,6"/>
+                <ComboBox x:Name="OwnershipCombo" Width="200"
+                          HorizontalAlignment="Left"
+                          Margin="0,0,0,12" SelectedIndex="0">
+                    <ComboBoxItem>Owned Copy</ComboBoxItem>
+                    <ComboBoxItem>Subscription</ComboBoxItem>
+                    <ComboBoxItem>Seafared</ComboBoxItem>
+                </ComboBox>
+
+                <!-- Score -->
+                <TextBlock Text="Your Score (1-10)" Foreground="White"
+                           FontSize="13" Margin="0,0,0,6"/>
+                <TextBox x:Name="ScoreBox" Width="200"
+                         HorizontalAlignment="Left"
+                         Style="{StaticResource RoundedTextBox}"
+                         Foreground="White" Margin="0,0,0,20"/>
+
+                <!-- Save + Achievements buttons -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button x:Name="SaveButton" Content="Save to Library"
+                            Width="160" Height="38" Margin="0,0,12,0"
+                            Style="{StaticResource RoundedButton}"
+                            Click="SaveButton_Click"/>
+                    <Button x:Name="AchievementsButton" Content="Select Achievements"
+                            Width="160" Height="38"
+                            Style="{StaticResource RoundedButton}"
+                            IsEnabled="False"
+                            Click="AchievementsButton_Click"/>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
