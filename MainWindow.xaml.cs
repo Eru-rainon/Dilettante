@@ -6,6 +6,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using System.Windows.Navigation;
+using System.Windows.Media;
+using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace Dilettante
 {
@@ -13,6 +16,19 @@ namespace Dilettante
     {
         private readonly SteamService _steamService;
         private DispatcherTimer _debounceTimer;
+
+        private readonly LinearGradientBrush _defaultBackground = new LinearGradientBrush
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(1, 1),
+            GradientStops = new GradientStopCollection
+    {
+            new GradientStop((Color)ColorConverter.ConvertFromString("#0a1628"), 0),
+            new GradientStop((Color)ColorConverter.ConvertFromString("#0d2137"), 0.3),
+            new GradientStop((Color)ColorConverter.ConvertFromString("#0a1628"), 0.6),
+            new GradientStop((Color)ColorConverter.ConvertFromString("#0d2137"), 1),
+    }
+        };
         public MainWindow()
         {
             InitializeComponent();
@@ -58,13 +74,19 @@ namespace Dilettante
 
             _debounceTimer.Start();
         }
-        private void SearchResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void SearchResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (SearchResults.SelectedItem is SteamSearchItem selected)
             {
                 SearchPopup.IsOpen = false;
                 SearchBox.Text = string.Empty;
-                MainFrame.Navigate(new GameDetailPage(selected));
+
+                Mouse.OverrideCursor = Cursors.Wait;
+                var page = await GameDetailPage.CreateAsync(selected);
+                Mouse.OverrideCursor = null;
+
+                MainFrame.Navigate(page);
+
             }
         }
 
@@ -96,7 +118,9 @@ namespace Dilettante
             }
         }
 
-        private void Click_LibraryButton(object sender, RoutedEventArgs e)
+     
+
+        private void ClickOnDilettante(Object sender, MouseButtonEventArgs e)
         {
             var window = (MainWindow)Window.GetWindow(this);
             window.MainFrame.Navigate(
@@ -106,10 +130,17 @@ namespace Dilettante
 
         private void UpdateNavButtons(object sender, NavigationEventArgs e)
         {
-            LibraryButton.IsEnabled = MainFrame.Content is not LibraryPage;
-            LibraryButton.Content = MainFrame.Content is LibraryPage ? "In Library" : "Your Library";
+            
             BackButton.IsEnabled = MainFrame.CanGoBack;
             ForwardButton.IsEnabled = MainFrame.CanGoForward;
+
+            if (MainFrame.Content is LibraryPage || MainFrame.Content is AchievementPage)
+                AnimateBackgroundTo(
+                    (Color)ColorConverter.ConvertFromString("#0a1628"),
+                    (Color)ColorConverter.ConvertFromString("#0d2137"),
+                    (Color)ColorConverter.ConvertFromString("#0a1628"),
+                    (Color)ColorConverter.ConvertFromString("#0d2137")
+                );
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -126,6 +157,45 @@ namespace Dilettante
             {
                 MainFrame.GoForward();
             }
+        }
+
+        public void AnimateBackgroundTo(Color c1, Color c2, Color c3, Color c4)
+        {
+            // If current background isn't a gradient we can animate, replace it first
+            if (Background is not LinearGradientBrush existingBrush ||
+                existingBrush.GradientStops.Count < 4)
+            {
+                Background = new LinearGradientBrush
+                {
+                    StartPoint = new Point(0, 0),
+                    EndPoint = new Point(1, 1),
+                    GradientStops = new GradientStopCollection
+            {
+                new GradientStop(_defaultBackground.GradientStops[0].Color, 0),
+                new GradientStop(_defaultBackground.GradientStops[1].Color, 0.3),
+                new GradientStop(_defaultBackground.GradientStops[0].Color, 0.6),
+                new GradientStop(_defaultBackground.GradientStops[1].Color, 1),
+            }
+                };
+            }
+
+            var brush = (LinearGradientBrush)Background;
+            AnimateStop(brush.GradientStops[0], c1, 0.0);
+            AnimateStop(brush.GradientStops[1], c2, 0.1);
+            AnimateStop(brush.GradientStops[2], c3, 0.2);
+            AnimateStop(brush.GradientStops[3], c4, 0.3);
+        }
+
+        private void AnimateStop(GradientStop stop, Color target, double delay)
+        {
+            var anim = new ColorAnimation
+            {
+                To = target,
+                Duration = TimeSpan.FromSeconds(0.8),
+                BeginTime = TimeSpan.FromSeconds(delay),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            stop.BeginAnimation(GradientStop.ColorProperty, anim);
         }
 
 

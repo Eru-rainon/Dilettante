@@ -11,6 +11,47 @@
                            FontWeight="Bold" Foreground="White"
                            Margin="0,0,0,20"/>
 
+                <!-- Filter + Sort bar -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                    <ComboBox x:Name="StatusFilter" Width="140" Height="32"
+              Margin="0,0,10,0" SelectedIndex="0"
+              SelectionChanged="Filter_Changed"
+                              Style="{StaticResource RoundedComboBox}">
+                        <ComboBoxItem>All Statuses</ComboBoxItem>
+                        <ComboBoxItem>Playing</ComboBoxItem>
+                        <ComboBoxItem>Completed</ComboBoxItem>
+                        <ComboBoxItem>Wishlisted</ComboBoxItem>
+                        <ComboBoxItem>Paused</ComboBoxItem>
+                        <ComboBoxItem>Abandoned</ComboBoxItem>
+                    </ComboBox>
+
+                    <ComboBox x:Name="OwnershipFilter" Width="140" Height="32"
+              Margin="0,0,10,0" SelectedIndex="0"
+              SelectionChanged="Filter_Changed"
+                              Style="{StaticResource RoundedComboBox}">
+                        <ComboBoxItem>All Ownership</ComboBoxItem>
+                        <ComboBoxItem>Owned Copy</ComboBoxItem>
+                        <ComboBoxItem>Subscription</ComboBoxItem>
+                        <ComboBoxItem>Seafared</ComboBoxItem>
+                    </ComboBox>
+
+                    <ComboBox x:Name="SortCombo" Width="160" Height="32"
+              Margin="0,0,10,0" SelectedIndex="0"
+              SelectionChanged="Filter_Changed"
+                              Style="{StaticResource RoundedComboBox}">
+                        <ComboBoxItem>Date Added</ComboBoxItem>
+                        <ComboBoxItem>Score</ComboBoxItem>
+                        <ComboBoxItem>Completion %</ComboBoxItem>
+                        <ComboBoxItem>Name</ComboBoxItem>
+                    </ComboBox>
+
+                    <Button x:Name="AscDescButton" Content="↓"
+            Width="32" Height="32"
+            Tag="desc"
+            Style="{StaticResource RoundedButton}"
+            Click="AscDesc_Click"/>
+                </StackPanel>
+
                 <!-- Empty state -->
                 <TextBlock x:Name="EmptyText"
                            Text="No games in your library yet. Search for a game to get started."
@@ -21,23 +62,22 @@
                 <ItemsControl x:Name="GamesPanel">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal"/>
+                            <UniformGrid Columns="6"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Width="200" Margin="0,0,16,16"
+                            <Border Margin="4,0,4,16"
                                     Cursor="Hand"
                                     MouseLeftButtonUp="GameCard_Click">
                                 <StackPanel>
 
                                     <!-- Image with overlays -->
-                                    <Grid Width="200" Height="94">
+                                    <Grid Height="120">
 
                                         <!-- Header image -->
                                         <Image Source="{Binding HeaderImageUrl}"
-                                               Stretch="UniformToFill"
-                                               Width="200" Height="94"/>
+                                               Stretch="UniformToFill"/>
 
                                         <!-- Dark overlay -->
                                         <Rectangle Opacity="0.3">
@@ -47,8 +87,8 @@
                                         </Rectangle>
 
                                         <!-- Achievement % — top right -->
-                                        <Border Width="36" Height="36"
-                                                CornerRadius="18"
+                                        <Border Width="40" Height="40"
+                                                CornerRadius="20"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Top"
                                                 Margin="0,6,6,0">
@@ -57,15 +97,32 @@
                                             </Border.Background>
                                             <TextBlock Text="{Binding CompletionText}"
                                                        Foreground="White"
-                                                       FontSize="9"
+                                                       FontSize="11"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <!-- User score — bottom left -->
+                                        <Border Width="40" Height="40"
+                                                CornerRadius="20"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Bottom"
+                                                Margin="6,0,0,6">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="#CC000000"/>
+                                            </Border.Background>
+                                            <TextBlock Text="{Binding UserScore}"
+                                                       Foreground="White"
+                                                       FontSize="11"
                                                        FontWeight="Bold"
                                                        HorizontalAlignment="Center"
                                                        VerticalAlignment="Center"/>
                                         </Border>
 
                                         <!-- Status icon — bottom right -->
-                                        <Border Width="30" Height="30"
-                                                CornerRadius="15"
+                                        <Border Width="34" Height="34"
+                                                CornerRadius="17"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Bottom"
                                                 Margin="0,0,6,6">
@@ -74,7 +131,23 @@
                                             </Border.Background>
                                             <TextBlock Text="{Binding StatusIcon}"
                                                        Foreground="{Binding StatusColor}"
-                                                       FontSize="12"
+                                                       FontSize="14"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <!-- Ownership icon — top left -->
+                                        <Border Width="34" Height="34"
+                                                CornerRadius="17"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                Margin="6,6,0,0">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="#CC000000"/>
+                                            </Border.Background>
+                                            <TextBlock Text="{Binding OwnershipIcon}"
+                                                       Foreground="White"
+                                                       FontSize="14"
                                                        HorizontalAlignment="Center"
                                                        VerticalAlignment="Center"/>
                                         </Border>
@@ -84,7 +157,7 @@
                                     <!-- Game name below image -->
                                     <TextBlock Text="{Binding Name}"
                                                Foreground="White"
-                                               FontSize="12"
+                                               FontSize="13"
                                                TextWrapping="Wrap"
                                                Margin="0,6,0,0"/>
                                 </StackPanel>

@@ -1,9 +1,11 @@
 ﻿using Dilettante.Services;
 using Dilettante.Models;
 using Dilettante.Data;
-using Microsoft.EntityFrameworkCore;
+using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Animation;
 
 namespace Dilettante.Pages
 {
@@ -15,6 +17,11 @@ namespace Dilettante.Pages
         private SteamGameDetail? _gameDetail;
         private int? _savedGameId = null;
         private bool _isEditMode => _existingGame != null;
+
+        private BitmapImage? _preloadedBitmap;
+        private SteamGameDetail? _preloadedDetail;
+
+
 
         // Add mode constructor
         public GameDetailPage(SteamSearchItem steamSearchItem)
@@ -35,7 +42,22 @@ namespace Dilettante.Pages
             Loaded += OnPageLoaded;
         }
 
-        private async void OnPageLoaded(object sender, RoutedEventArgs e)
+        public static async Task<GameDetailPage> CreateAsync(SteamSearchItem searchItem)
+        {
+            var page = new GameDetailPage(searchItem);
+            await page.LoadDataAsync();
+            return page;
+            
+        }
+
+        public static async Task<GameDetailPage> CreateAsync(Game existingGame)
+        {
+            var page = new GameDetailPage(existingGame);
+            await page.LoadDataAsync();
+            return page;
+        }
+
+        private async Task LoadDataAsync()
         {
             int appId = _isEditMode
                 ? int.Parse(_existingGame!.SteamAppId)
@@ -44,26 +66,43 @@ namespace Dilettante.Pages
             _gameDetail = await _steamService.GetGameDetailsAsync(appId);
             if (_gameDetail == null) return;
 
-            HeaderImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(_gameDetail.HeaderImage));
-            BackgroundImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(_gameDetail.Background));
+            // Pre-download the bitmap
+            var headerBitmap = new BitmapImage();
+            headerBitmap.BeginInit();
+            headerBitmap.UriSource = new Uri(_gameDetail.HeaderImage);
+            headerBitmap.CacheOption = BitmapCacheOption.OnLoad;
+            headerBitmap.EndInit();
+           
 
-            GameTitle.Text = _gameDetail.Name;
-            DescriptionText.Text = _gameDetail.ShortDescription;
-            GenresText.Text = string.Join(", ", _gameDetail.Genres?.Select(g => g.Description) ?? []);
-            DevelopersText.Text = string.Join(", ", _gameDetail.Developers ?? []);
-            MetacriticText.Text = _gameDetail.Metacritic != null
-                ? $"Metacritic: {_gameDetail.Metacritic.Score}"
+            _preloadedBitmap = headerBitmap;
+            _preloadedDetail = _gameDetail;
+        }
+
+        private void OnPageLoaded(object sender, RoutedEventArgs e)
+        {
+            if (_preloadedBitmap == null || _preloadedDetail == null) return;
+
+            HeaderImage.Source = _preloadedBitmap;
+            ApplyColours(_preloadedBitmap);
+
+            GameTitle.Text = _preloadedDetail.Name;
+            DescriptionText.Text = _preloadedDetail.ShortDescription;
+            GenresText.Text = string.Join(", ", _preloadedDetail.Genres?.Select(g => g.Description) ?? []);
+            DevelopersText.Text = string.Join(", ", _preloadedDetail.Developers ?? []);
+            MetacriticText.Text = _preloadedDetail.Metacritic != null
+                ? $"Metacritic: {_preloadedDetail.Metacritic.Score}"
                 : "No Metacritic score";
-            ScreenshotsList.ItemsSource = _gameDetail.Screenshots;
+            ScreenshotsList.ItemsSource = _preloadedDetail.Screenshots;
 
-            // Pre-fill fields if in edit mode
-            if (_isEditMode)
+            using var db = new AppDbContext();
+            var game = db.Games.FirstOrDefault(g => g.SteamAppId == _preloadedDetail.SteamAppId.ToString());
+            if (game != null)
             {
-                StatusCombo.SelectedIndex = (int)_existingGame!.Status;
-                OwnershipCombo.SelectedIndex = (int)_existingGame.Ownership;
-                ScoreBox.Text = _existingGame.Userscore?.ToString() ?? "";
+                StatusCombo.SelectedIndex = (int)game.Status;
+                OwnershipCombo.SelectedIndex = (int)game.Ownership;
+                ScoreBox.Text = game.Userscore?.ToString() ?? "";
                 SaveButton.Content = "Update";
-                AchievementsButton.IsEnabled = _existingGame.Status != GameStatus.Wishlisted;
+                AchievementsButton.IsEnabled = game.Status != GameStatus.Wishlisted;
             }
         }
 
@@ -84,6 +123,7 @@ namespace Dilettante.Pages
                 game.Status = selectedStatus;
                 game.Ownership = (GameOwnership)OwnershipCombo.SelectedIndex;
                 game.Userscore = int.TryParse(ScoreBox.Text, out int score) ? score : null;
+                game.DateAdded = DateTime.Now;
                 db.SaveChanges();
 
                 _savedGameId = game.Id;
@@ -126,5 +166,83 @@ namespace Dilettante.Pages
                 new AchievementPage(_savedGameId.Value, _gameDetail.SteamAppId, _gameDetail.Name)
             );
         }
+
+        private void ApplyColours(BitmapSource bitmapSource)
+        {
+            var (dominant, accent) = ColourExtractor.Extract(bitmapSource);
+
+            BackgroundImage.Source = bitmapSource;
+            BackgroundImage.Opacity = 0;
+            var fade = new DoubleAnimation(0, 1,
+                new Duration(TimeSpan.FromSeconds(2.0)))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            BackgroundImage.BeginAnimation(UIElement.OpacityProperty, fade);
+
+            Color c1 = Darken(dominant, 0.25);
+            Color c2 = Darken(dominant, 0.35);
+            Color c3 = Darken(dominant, 0.20);
+            Color c4 = Darken(dominant, 0.30);
+            Color c2Blended = BlendColours(c2, accent, 0.15);
+
+            AnimateGradientStop(GradStop1, c1, 0.0);
+            AnimateGradientStop(GradStop2, c2Blended, 0.1);
+            AnimateGradientStop(GradStop3, c3, 0.2);
+            AnimateGradientStop(GradStop4, c4, 0.3);
+
+          //window
+            var windowBrush = new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(1, 1)
+            };
+            windowBrush.GradientStops.Add(new GradientStop(c1, 0));
+            windowBrush.GradientStops.Add(new GradientStop(c2Blended, 0.3));
+            windowBrush.GradientStops.Add(new GradientStop(c3, 0.6));
+            windowBrush.GradientStops.Add(new GradientStop(c4, 1));
+
+            var window = (MainWindow)Window.GetWindow(this);
+            window.AnimateBackgroundTo(c1, c2Blended, c3, c4);
+
+            // Page itself transparent so window gradient shows through
+            Background = new SolidColorBrush(Colors.Transparent);
+
+            var accentBrush = new SolidColorBrush(accent);
+            SaveButton.Background = accentBrush;
+            AchievementsButton.Background = accentBrush;
+        }
+        private static Color Darken(Color c, double factor)
+        {
+            return Color.FromRgb(
+                (byte)(c.R * factor),
+                (byte)(c.G * factor),
+                (byte)(c.B * factor)
+            );
+        }
+
+        private static Color BlendColours(Color a, Color b, double t)
+        {
+            return Color.FromRgb(
+                (byte)(a.R + (b.R - a.R) * t),
+                (byte)(a.G + (b.G - a.G) * t),
+                (byte)(a.B + (b.B - a.B) * t)
+            );
+        }
+
+        private void AnimateGradientStop(GradientStop stop, Color targetColor, double delaySeconds)
+        {
+            var anim = new ColorAnimation
+            {
+                To = targetColor,
+                Duration = TimeSpan.FromSeconds(0.8),
+                BeginTime = TimeSpan.FromSeconds(delaySeconds),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            stop.BeginAnimation(GradientStop.ColorProperty, anim);
+        }
+
+    
+
     }
 }

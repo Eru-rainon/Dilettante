@@ -4,17 +4,21 @@
       Background="Transparent">
 
     <Grid>
-        <!-- Blurred background -->
         <Image x:Name="BackgroundImage" Stretch="UniformToFill" Opacity="0.8">
             <Image.Effect>
-                <BlurEffect Radius="40"/>
+                <BlurEffect Radius="60"/>
             </Image.Effect>
         </Image>
 
-        <!-- Dark overlay -->
-        <Rectangle>
+        <!-- Colour gradient overlay -->
+        <Rectangle x:Name="ColourOverlay" Opacity="0.8">
             <Rectangle.Fill>
-                <SolidColorBrush Color="#0a1628" Opacity="0.3"/>
+                <LinearGradientBrush x:Name="OverlayBrush" StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop x:Name="GradStop1" Color="#0a1628" Offset="0"/>
+                    <GradientStop x:Name="GradStop2" Color="#0d2137" Offset="0.3"/>
+                    <GradientStop x:Name="GradStop3" Color="#0a1628" Offset="0.6"/>
+                    <GradientStop x:Name="GradStop4" Color="#0d2137" Offset="1"/>
+                </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
 
@@ -65,6 +69,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0" Grid.Column="0"
@@ -98,6 +103,14 @@
                                        x:Name="AchievementsText" Foreground="White"
                                        FontSize="12" FontWeight="SemiBold"
                                        Margin="0,0,0,10"/>
+
+                            <TextBlock Grid.Row="4" Grid.Column="0"
+                                       Text="Last Updated" Foreground="#8899aa"
+                                       FontSize="12" Margin="0,0,0,10"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1"
+                                       x:Name="DateAddedText" Foreground="White"
+                                       FontSize="12" FontWeight="SemiBold"
+                                       Margin="0,0,0,10"/>  
                         </Grid>
 
                         <!-- Divider -->
@@ -118,6 +131,11 @@
                                     Width="180" Height="36"
                                     Style="{StaticResource RoundedButton}"
                                     Click="AchievementsButton_Click"/>
+                            <Button x:Name="DeleteButton"
+                                     Content="🗑️"
+                                     Width="36" Height="36"  Margin="10,0,0,0"
+                                     Style="{StaticResource RoundedButton}"
+                                     Click="DeleteButton_Click"/>
                         </StackPanel>
 
                     </StackPanel>

@@ -4,21 +4,25 @@
       Background="Transparent">
 
     <Grid>
-        <!-- Blurred background layer -->
-        <Image x:Name="BackgroundImage" Stretch="UniformToFill"
-               Opacity="0.8">
+
+
+        <Image x:Name="BackgroundImage" Stretch="UniformToFill" Opacity="0.8">
             <Image.Effect>
-                <BlurEffect Radius="40"/>
+                <BlurEffect Radius="60"/>
             </Image.Effect>
         </Image>
 
-        <!-- Dark overlay to tone down the background -->
-        <Rectangle>
+        <!-- Colour gradient overlay -->
+        <Rectangle x:Name="ColourOverlay" Opacity="0.8">
             <Rectangle.Fill>
-                <SolidColorBrush Color="#0a1628" Opacity="0.2"/>
+                <LinearGradientBrush x:Name="OverlayBrush" StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop x:Name="GradStop1" Color="#0a1628" Offset="0"/>
+                    <GradientStop x:Name="GradStop2" Color="#0d2137" Offset="0.3"/>
+                    <GradientStop x:Name="GradStop3" Color="#0a1628" Offset="0.6"/>
+                    <GradientStop x:Name="GradStop4" Color="#0d2137" Offset="1"/>
+                </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
-
         <!-- Scrollable content on top -->
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="24,20,24,24">
@@ -30,6 +34,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
+
 
                         <!-- Left: game info -->
                         <StackPanel Grid.Column="0" VerticalAlignment="Top"

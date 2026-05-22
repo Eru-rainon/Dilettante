@@ -32,7 +32,9 @@
             <!-- Left: Title + tag -->
             <StackPanel Grid.Column="0" VerticalAlignment="Center">
                 <TextBlock Text="Dilettante" FontSize="22"
-                           FontWeight="Bold" Foreground="White"/>
+                           FontWeight="Bold" Foreground="White"
+                           MouseLeftButtonDown="ClickOnDilettante"
+                           Cursor="Hand"/>
                 <TextBlock x:Name="ProfileTag" FontSize="11"
                            Foreground="#8899aa"/>
             </StackPanel>
@@ -67,7 +69,7 @@
                     <TextBlock Text="Search Steam"
                                Foreground="#8899aa" FontSize="13"
                                VerticalAlignment="Center"
-                               Margin="12,0,0,0"
+                               Margin="20,0,0,0"
                                IsHitTestVisible="False">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
@@ -112,10 +114,10 @@
                     </Popup>
                 </Grid>
 
-                <Button x:Name="LibraryButton" Content="Your Library"
+                <Button x:Name="NonSteam" Content="Add Non-Steam"
                         Width="120" Height="38" Margin="10,0,0,0"
                         Style="{StaticResource RoundedButton}"
-                        Click="Click_LibraryButton"/>
+                        />
             </StackPanel>
         </Grid>
 

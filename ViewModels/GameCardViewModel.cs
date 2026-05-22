@@ -49,6 +49,16 @@ namespace Dilettante.ViewModels
             _ => "#8899aa"
         };
 
+        public string UserScore => game.Userscore != null? game.Userscore.ToString() :  "_";
+
+        public string OwnershipIcon => game.Ownership switch
+        {
+            GameOwnership.OwnedCopy => "🛒",
+            GameOwnership.Subscription => "⏳",
+            GameOwnership.Seafared => "☠️",
+            _ => "?"
+        };
+
         public GameCardViewModel(Game game)
         {
             this.game = game;

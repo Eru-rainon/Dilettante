@@ -35,13 +35,25 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}"
-                     CornerRadius="8">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
+                        <Grid>
+
+                            <!-- Main button background -->
+                            <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="8"/>
+
+                            <!-- Darkening overlay -->
+                            <Border x:Name="hoverOverlay"
+                            Background="Black"
+                            Opacity="0"
+                            CornerRadius="8"/>
+
+                            <ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                        </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#3a8acf"/>
+                                <Setter TargetName="hoverOverlay" Property="Opacity" Value="0.15"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="border" Property="Background" Value="#2a3a4a"/>
@@ -79,5 +91,86 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- filters Hover Style -->
+        <Style x:Key="RoundedComboBox" TargetType="ComboBox">
+            <Setter Property="Background" Value="#1a2a3a"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="8"
+                            Padding="{TemplateBinding Padding}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="20"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter Grid.Column="0"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              VerticalAlignment="Center"
+                                              IsHitTestVisible="False"/>
+                                    <TextBlock Grid.Column="1" Text="▾"
+                                       Foreground="White" FontSize="10"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       IsHitTestVisible="False"/>
+                                </Grid>
+                            </Border>
+                            <ToggleButton Opacity="0"
+                                  IsChecked="{Binding IsDropDownOpen, 
+                                      RelativeSource={RelativeSource TemplatedParent}, 
+                                      Mode=TwoWay}"/>
+                            <Popup x:Name="PART_Popup"
+                           Placement="Bottom"
+                           PlacementTarget="{Binding ElementName=border}"
+                           IsOpen="{TemplateBinding IsDropDownOpen}"
+                           AllowsTransparency="True"
+                           Focusable="False"
+                           PopupAnimation="Slide">
+                                <Border Background="#1a2a3a"
+                                CornerRadius="8"
+                                BorderBrush="#2a4a6a"
+                                BorderThickness="1"
+                                MinWidth="{TemplateBinding ActualWidth}"
+                                MaxHeight="200">
+                                    <ScrollViewer>
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1e3347"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Resources>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Padding" Value="10,6"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#1a3a5a"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#2a7abf"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Style.Resources>
+        </Style>
+
     </Application.Resources>
 </Application>
