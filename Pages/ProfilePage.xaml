@@ -1,0 +1,148 @@
+﻿<Page x:Class="Dilettante.Pages.ProfilePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="Transparent">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24,24,24,24">
+
+            <TextBlock Text="Profile" FontSize="26"
+                       FontWeight="Bold" Foreground="White"
+                       Margin="0,0,0,24"/>
+
+            <!-- Library Stats -->
+            <TextBlock Text="LIBRARY" FontSize="11"
+                       FontWeight="Bold" Foreground="#4fc3f7"
+                       Margin="0,0,0,12"/>
+
+            <WrapPanel Margin="0,0,0,24">
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="Total Games" Style="{StaticResource StatLabel}"/>
+                        <TextBlock x:Name="TotalGamesText" Style="{StaticResource StatValue}"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="Playing" Style="{StaticResource StatLabel}"/>
+                        <TextBlock x:Name="PlayingText" Style="{StaticResource StatValue}" Foreground="#2a7abf"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="Completed" Style="{StaticResource StatLabel}"/>
+                        <TextBlock x:Name="CompletedText" Style="{StaticResource StatValue}" Foreground="#4caf50"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="Wishlisted" Style="{StaticResource StatLabel}"/>
+                        <TextBlock x:Name="WishlistedText" Style="{StaticResource StatValue}" Foreground="#ab47bc"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="Paused" Style="{StaticResource StatLabel}"/>
+                        <TextBlock x:Name="PausedText" Style="{StaticResource StatValue}" Foreground="#ff9800"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="Abandoned" Style="{StaticResource StatLabel}"/>
+                        <TextBlock x:Name="AbandonedText" Style="{StaticResource StatValue}" Foreground="#ef5350"/>
+                    </StackPanel>
+                </Border>
+            </WrapPanel>
+
+            <TextBlock x:Name="LibraryFlavourText"
+           Foreground="#8899aa" FontSize="12"
+           FontStyle="Italic" Margin="0,-12,0,20"/>
+
+            <!-- Divider -->
+            <Rectangle Height="1" Margin="0,0,0,20">
+                <Rectangle.Fill>
+                    <SolidColorBrush Color="#2a4a6a"/>
+                </Rectangle.Fill>
+            </Rectangle>
+
+            <!-- Achievement Stats -->
+            <TextBlock Text="ACHIEVEMENTS" FontSize="11"
+                       FontWeight="Bold" Foreground="#4fc3f7"
+                       Margin="0,0,0,12"/>
+
+            <WrapPanel Margin="0,0,0,24">
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="Total Unlocked" Style="{StaticResource StatLabel}"/>
+                        <TextBlock x:Name="TotalAchievementsText" Style="{StaticResource StatValue}"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="Avg Completion" Style="{StaticResource StatLabel}"/>
+                        <TextBlock x:Name="AvgCompletionText" Style="{StaticResource StatValue}" Foreground="#4fc3f7"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}">
+                    <StackPanel>
+                        <TextBlock Text="Games Tracked" Style="{StaticResource StatLabel}"/>
+                        <TextBlock x:Name="GamesTrackedText" Style="{StaticResource StatValue}"/>
+                    </StackPanel>
+                </Border>
+            </WrapPanel>
+
+            <TextBlock x:Name="AchievementFlavourText"
+           Foreground="#8899aa" FontSize="12"
+           FontStyle="Italic" Margin="0,-12,0,20"/>
+
+            <!-- Divider -->
+            <Rectangle Height="1" Margin="0,0,0,20">
+                <Rectangle.Fill>
+                    <SolidColorBrush Color="#2a4a6a"/>
+                </Rectangle.Fill>
+            </Rectangle>
+
+            <!-- Integrity -->
+            <TextBlock Text="GAMER INTEGRITY" FontSize="11"
+                       FontWeight="Bold" Foreground="#4fc3f7"
+                       Margin="0,0,0,12"/>
+
+            <WrapPanel Margin="0,0,0,8">
+                <Border Style="{StaticResource StatCard}" Width="180">
+                    <StackPanel>
+                        <TextBlock Text="Integrity Score" Style="{StaticResource StatLabel}"/>
+                        <TextBlock x:Name="IntegrityScoreText" Style="{StaticResource StatValue}" Foreground="#4caf50"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}" Width="180">
+                    <StackPanel>
+                        <TextBlock Text="Legitimate" Style="{StaticResource StatLabel}"/>
+                        <TextBlock x:Name="LegitimateText" Style="{StaticResource StatValue}" Foreground="#4caf50"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource StatCard}" Width="180">
+                    <StackPanel>
+                        <TextBlock Text="Seafared" Style="{StaticResource StatLabel}"/>
+                        <TextBlock x:Name="SeafaredText" Style="{StaticResource StatValue}" Foreground="#ef5350"/>
+                    </StackPanel>
+                </Border>
+            </WrapPanel>
+
+            <TextBlock x:Name="IntegrityFlavourText"
+                       Foreground="#8899aa" FontSize="13"
+                       FontStyle="Italic" Margin="0,8,0,0"/>
+
+            <Button x:Name="ExportButton"
+                    Content="Export Collection"
+                    Width="160" Height="38"
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource RoundedButton}"
+                    Click="ExportButton_Click"/>
+
+        </StackPanel>
+
+        
+    </ScrollViewer>
+
+ 
+</Page>

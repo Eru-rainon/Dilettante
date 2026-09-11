@@ -4,31 +4,62 @@
       Background="Transparent">
 
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="24,20,24,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-                <!-- Title -->
-                <TextBlock x:Name="PageTitle" FontSize="24"
+        <!-- Sticky header -->
+        <Border Grid.Row="0" Padding="24,16,24,12">
+            <Border.Background>
+                <SolidColorBrush Color="#0a1628" Opacity="0.95"/>
+            </Border.Background>
+            <StackPanel>
+                <TextBlock x:Name="PageTitle" FontSize="22"
                            FontWeight="Bold" Foreground="White"
                            Margin="0,0,0,4"/>
                 <TextBlock x:Name="ProgressText" FontSize="13"
-                           Foreground="#8899aa" Margin="0,0,0,20"/>
+                           Foreground="#8899aa" Margin="0,0,0,12"/>
 
-                <!-- Save button -->
-                <Button x:Name="ToggleAllButton"
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Search box -->
+                    <TextBox Grid.Column="0" x:Name="SearchBox"
+                             Style="{StaticResource RoundedTextBox}"
+                             Foreground="White" FontSize="13"
+                             Margin="0,0,10,0"
+                             TextChanged="SearchBox_TextChanged"/>
+
+                    <Button Grid.Column="1" x:Name="ToggleAllButton"
                             Content="Select All"
-                            Width="180" Height="38"
-                            HorizontalAlignment="Left"
-                            Margin="0,2,0,16"
+                            Width="120" Height="36"
+                            Margin="0,0,10,0"
                             Style="{StaticResource RoundedButton}"
                             Click="ToggleAll"/>
 
-                <!-- Achievement list -->
+                    <Button Grid.Column="2" x:Name="SaveAchievementsButton"
+                            Content="Save Achievements"
+                            Width="160" Height="36"
+                            Style="{StaticResource RoundedButton}"
+                            Click="SaveAchievementsButton_Click"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Scrollable achievement list -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="24,12,24,24">
                 <ItemsControl x:Name="AchievementList">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border  CornerRadius="8"
-                                    Margin="0,0,0,8" Padding="12">
+                            <Border CornerRadius="8" Margin="0,0,0,8" Padding="12"
+                                    Cursor="Hand"
+                                    MouseLeftButtonUp="ToggleAchievement">
                                 <Border.Style>
                                     <Style TargetType="Border">
                                         <Setter Property="Background" Value="#0d1f30"/>
@@ -36,9 +67,17 @@
                                             <Trigger Property="IsMouseOver" Value="True">
                                                 <Setter Property="Background" Value="#0a1828"/>
                                             </Trigger>
+                                            <DataTrigger Binding="{Binding IsUnlocked}" Value="True">
+                                                <Setter Property="Background" Value="#0d2a1a"/>
+                                            </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Border.Style>
+                                <Border.Resources>
+                                    <Style TargetType="Border" x:Key="UnlockedStyle">
+                                        <Setter Property="Background" Value="#0d2a1a"/>
+                                    </Style>
+                                </Border.Resources>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -46,53 +85,34 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- Checkbox -->
                                     <CheckBox Grid.Column="0"
                                               IsChecked="{Binding IsUnlocked, Mode=TwoWay}"
                                               VerticalAlignment="Center"
                                               Margin="0,0,12,0"
                                               Cursor="Hand"
                                               Checked="CheckBoxToggle"
-                                              Unchecked="CheckBoxToggle"/>
+                                              Unchecked="CheckBoxToggle"
+                                              IsHitTestVisible="False"/>
 
-                                    <!-- Icon -->
                                     <Image Grid.Column="1"
                                            Source="{Binding IconUrl}"
                                            Width="32" Height="32"
                                            Margin="0,0,12,0"
-                                           VerticalAlignment="Center"
-                                           Cursor="Hand"
-                                           MouseLeftButtonDown="ToggleAchievement"/>
+                                           VerticalAlignment="Center"/>
 
-                                    <!-- Name + Description -->
                                     <StackPanel Grid.Column="2" VerticalAlignment="Center">
                                         <TextBlock Text="{Binding DisplayName}"
                                                    Foreground="White" FontSize="13"
-                                                   FontWeight="SemiBold"
-                                                   Cursor="Hand"
-                                                   MouseLeftButtonUp="ToggleAchievement"/>
+                                                   FontWeight="SemiBold"/>
                                         <TextBlock Text="{Binding Description}"
                                                    Foreground="#8899aa" FontSize="12"
-                                                   TextWrapping="Wrap"
-                                                   Cursor="Hand"
-                                                   MouseLeftButtonUp="ToggleAchievement"/>
+                                                   TextWrapping="Wrap"/>
                                     </StackPanel>
-
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-
-                <!-- Save button -->
-                <Button x:Name="SaveAchievementsButton"
-                        Content="Save Achievements"
-                        Width="180" Height="38"
-                        HorizontalAlignment="Left"
-                        Margin="0,16,0,0"
-                        Style="{StaticResource RoundedButton}"
-                        Click="SaveAchievementsButton_Click"/>
-
             </StackPanel>
         </ScrollViewer>
     </Grid>

@@ -92,7 +92,7 @@ namespace Dilettante.Pages
 
             var dialog = new Views.ConfirmDialog(
                $"Are you sure you want to remove {_game.Name} from your library?",
-               window);
+               window,"Delete","Cancel");
             dialog.ShowDialog();
 
             if (!dialog.Confirmed) return;

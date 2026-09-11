@@ -1,6 +1,7 @@
 ﻿using Dilettante.Data;
 using Dilettante.Models;
 using Dilettante.ViewModels;
+using Dilettante.Configuration;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,11 +27,22 @@ namespace Dilettante.Pages
             var games = db.Games.Include(g => g.Achievements).ToList();
             _allCards = games.Select(g => new GameCardViewModel(g)).ToList();
 
-           
+            var prefs = UserPreferencesService.Current;
+            StatusFilter.SelectedIndex = prefs.StatusFilterIndex;
+            OwnershipFilter.SelectedIndex = prefs.OwnershipFilterIndex;
+            SortCombo.SelectedIndex = prefs.SortComboIndex;
+            AscDescButton.Tag = prefs.SortDirection;
+            AscDescButton.Content = prefs.SortDirection == "asc" ? "↑" : "↓";
+
+            // Wire up AFTER setting values so they don't fire during init
+            StatusFilter.SelectionChanged += Filter_Changed;
+            OwnershipFilter.SelectionChanged += Filter_Changed;
+            SortCombo.SelectionChanged += Filter_Changed;
+
             ApplyFilters();
             EmptyText.Visibility = _allCards.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-
         }
+        
 
         private void GameCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -74,7 +86,16 @@ namespace Dilettante.Pages
             GamesPanel.ItemsSource = filtered.ToList();
         }
 
-        private void Filter_Changed(object sender, SelectionChangedEventArgs e) => ApplyFilters();
+        private void Filter_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            var prefs = UserPreferencesService.Current;
+            prefs.StatusFilterIndex = StatusFilter.SelectedIndex;
+            prefs.OwnershipFilterIndex = OwnershipFilter.SelectedIndex;
+            prefs.SortComboIndex = SortCombo.SelectedIndex;
+            UserPreferencesService.Save();
+            ApplyFilters();
+        }
+
 
         private void AscDesc_Click(object sender, RoutedEventArgs e)
         {
@@ -88,7 +109,9 @@ namespace Dilettante.Pages
                 AscDescButton.Tag = "asc";
                 AscDescButton.Content = "↑";
             }
-            ApplyFilters();
+            UserPreferencesService.Current.SortDirection = AscDescButton.Tag.ToString()!;
+    UserPreferencesService.Save();
+    ApplyFilters();
         }
     }
 }

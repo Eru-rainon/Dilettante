@@ -15,7 +15,7 @@
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                     <ComboBox x:Name="StatusFilter" Width="140" Height="32"
               Margin="0,0,10,0" SelectedIndex="0"
-              SelectionChanged="Filter_Changed"
+   
                               Style="{StaticResource RoundedComboBox}">
                         <ComboBoxItem>All Statuses</ComboBoxItem>
                         <ComboBoxItem>Playing</ComboBoxItem>
@@ -27,7 +27,7 @@
 
                     <ComboBox x:Name="OwnershipFilter" Width="140" Height="32"
               Margin="0,0,10,0" SelectedIndex="0"
-              SelectionChanged="Filter_Changed"
+
                               Style="{StaticResource RoundedComboBox}">
                         <ComboBoxItem>All Ownership</ComboBoxItem>
                         <ComboBoxItem>Owned Copy</ComboBoxItem>
@@ -37,7 +37,7 @@
 
                     <ComboBox x:Name="SortCombo" Width="160" Height="32"
               Margin="0,0,10,0" SelectedIndex="0"
-              SelectionChanged="Filter_Changed"
+
                               Style="{StaticResource RoundedComboBox}">
                         <ComboBoxItem>Date Added</ComboBoxItem>
                         <ComboBoxItem>Score</ComboBoxItem>

@@ -113,5 +113,16 @@ namespace Dilettante.Pages
             }
             UpdateProgress();
         }
+
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var query = SearchBox.Text.Trim().ToLower();
+            if (string.IsNullOrEmpty(query))
+                AchievementList.ItemsSource = _achievements;
+            else
+                AchievementList.ItemsSource = _achievements
+                    .Where(a => a.DisplayName.ToLower().Contains(query))
+                    .ToList();
+        }
     }
 }

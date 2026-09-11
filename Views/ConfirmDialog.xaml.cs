@@ -6,10 +6,21 @@ namespace Dilettante.Views
     {
         public bool Confirmed { get; private set; } = false;
 
-        public ConfirmDialog(string message, Window owner)
+        public ConfirmDialog(string message, Window owner, String yescontent, String Nocontent)
         {
             InitializeComponent();
             MessageText.Text = message;
+            ConfirmButton.Content = yescontent;
+            CancelButton.Content = Nocontent;
+            Owner = owner;
+        }
+
+        public ConfirmDialog(string message, Window owner, String yescontent)
+        {
+            InitializeComponent();
+            MessageText.Text = message;
+            ConfirmButton.Content = yescontent;
+            CancelButton.IsEnabled = false;
             Owner = owner;
         }
 

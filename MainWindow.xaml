@@ -24,6 +24,7 @@
         <!-- Navbar: 3 columns — Title | Nav buttons | Search + Library -->
         <Grid Grid.Row="0" Margin="24,10,24,10">
             <Grid.ColumnDefinitions>
+                
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -31,12 +32,12 @@
 
             <!-- Left: Title + tag -->
             <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                
                 <TextBlock Text="Dilettante" FontSize="22"
                            FontWeight="Bold" Foreground="White"
                            MouseLeftButtonDown="ClickOnDilettante"
                            Cursor="Hand"/>
-                <TextBlock x:Name="ProfileTag" FontSize="11"
-                           Foreground="#8899aa"/>
+                
             </StackPanel>
 
             <!-- Center: Back/Forward -->
@@ -118,6 +119,12 @@
                         Width="120" Height="38" Margin="10,0,0,0"
                         Style="{StaticResource RoundedButton}"
                         />
+
+                <Button x:Name="ProfileButton" Width="38" Height="38" Margin="10,0,0,0"
+                    Style="{StaticResource RoundedButton}"
+                    Click="Click_ProfileButton">        
+                    <Image Source="/user.png" Width="20" Height="20"/>
+                </Button>
             </StackPanel>
         </Grid>
 

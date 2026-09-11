@@ -2,6 +2,7 @@
 using Dilettante.Data;
 using Dilettante.Models;
 using Dilettante.Services;
+using Dilettante.Configuration;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -9,6 +10,7 @@ using System.Windows.Navigation;
 using System.Windows.Media;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
+using System.ComponentModel;
 
 namespace Dilettante
 {
@@ -32,6 +34,20 @@ namespace Dilettante
         public MainWindow()
         {
             InitializeComponent();
+
+
+            var prefs = UserPreferencesService.Current;
+            Width = prefs.WindowWidth;
+            Height = prefs.WindowHeight;
+            if(prefs.WindowLeft >=0 && prefs.WindowTop >= 0)
+            {
+                Left = prefs.WindowLeft;
+                Top = prefs.WindowTop;
+                WindowStartupLocation = WindowStartupLocation.Manual;
+            }
+
+
+
             _steamService = new SteamService();
             _debounceTimer = new DispatcherTimer
             {
@@ -45,7 +61,7 @@ namespace Dilettante
             };
 
             MainFrame.Navigate(new LibraryPage());
-            UpdateTag();
+
 
 
         }
@@ -97,26 +113,7 @@ namespace Dilettante
                 Dispatcher.Invoke(() => SearchPopup.IsOpen = false));
         }
 
-        private void UpdateTag()
-        {
-            using var db = new AppDbContext();
-            var games = db.Games;
-            int completedCount = games.Count(g => g.Status == GameStatus.Completed);
-
-            int total = games.Count();
-            int CompletionPercentage = total == 0 ? 0 : completedCount * 100 / total;
-            if (CompletionPercentage < 30)
-            {
-                ProfileTag.Text = "Incepta Sine Fine";
-            }else if (CompletionPercentage > 70)
-            {
-                ProfileTag.Text = "The Completionist";
-            }
-            else
-            {
-                ProfileTag.Text = "The Half Blood Prince";
-            }
-        }
+     
 
      
 
@@ -131,7 +128,7 @@ namespace Dilettante
         private void UpdateNavButtons(object sender, NavigationEventArgs e)
         {
             
-            BackButton.IsEnabled = MainFrame.CanGoBack;
+            BackButton.IsEnabled = MainFrame.CanGoBack && MainFrame.Content is not LibraryPage ;
             ForwardButton.IsEnabled = MainFrame.CanGoForward;
 
             if (MainFrame.Content is LibraryPage || MainFrame.Content is AchievementPage)
@@ -197,6 +194,24 @@ namespace Dilettante
             };
             stop.BeginAnimation(GradientStop.ColorProperty, anim);
         }
+
+        private void Click_ProfileButton(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new ProfilePage());
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            var prefs = UserPreferencesService.Current;
+            prefs.WindowLeft = Left;
+            prefs.WindowTop = Top;
+            prefs.WindowWidth = Width;
+            prefs.WindowHeight = Height;
+            UserPreferencesService.Save();
+            base.OnClosing(e);
+        }
+
+
 
 
 

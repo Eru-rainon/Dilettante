@@ -2,6 +2,7 @@ bin/
 obj/
 *.db
 appsettings.json
+userprefs.json
 *.user
 .vs/
 *.db-shm
